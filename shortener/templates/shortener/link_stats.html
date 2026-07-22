@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Stats for {{ short_url.short_code }}{% endblock %}
+{% block content %}
+<section>
+    <a href="{% url 'dashboard' %}" class="back-link">&larr; Back to dashboard</a>
+    <h1>Stats for /{{ short_url.short_code }}</h1>
+
+    <div class="stats-summary">
+        <div class="stat-box">
+            <span class="stat-number">{{ short_url.click_count }}</span>
+            <span class="stat-label">Total clicks</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{{ short_url.created_at|date:"M j, Y" }}</span>
+            <span class="stat-label">Created</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{% if short_url.expires_at %}{{ short_url.expires_at|date:"M j, Y" }}{% else %}Never{% endif %}</span>
+            <span class="stat-label">Expires</span>
+        </div>
+    </div>
+
+    <p class="original-url">Original URL: <a href="{{ short_url.original_url }}" target="_blank" rel="noopener">{{ short_url.original_url }}</a></p>
+
+    <h2>Recent clicks</h2>
+    {% if clicks %}
+        <table class="links-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>IP address</th>
+                    <th>Referrer</th>
+                    <th>User agent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for click in clicks %}
+                <tr>
+                    <td>{{ click.clicked_at|date:"M j, Y g:i A" }}</td>
+                    <td>{{ click.ip_address|default:"—" }}</td>
+                    <td class="truncate">{{ click.referrer|default:"Direct" }}</td>
+                    <td class="truncate" title="{{ click.user_agent }}">{{ click.user_agent|default:"—" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty-state">No clicks recorded yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

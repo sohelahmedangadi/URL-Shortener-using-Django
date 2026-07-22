@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section>
+    <div class="dashboard-header">
+        <h1>Your links</h1>
+        <a href="{% url 'home' %}" class="btn-primary">+ New link</a>
+    </div>
+
+    {% if links %}
+        <table class="links-table">
+            <thead>
+                <tr>
+                    <th>Short link</th>
+                    <th>Original URL</th>
+                    <th>Clicks</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in links %}
+                <tr>
+                    <td><a href="{{ link.get_short_path }}" target="_blank" rel="noopener">/{{ link.short_code }}</a></td>
+                    <td class="truncate" title="{{ link.original_url }}">{{ link.original_url }}</td>
+                    <td>{{ link.total_clicks }}</td>
+                    <td>
+                        {% if link.is_expired %}
+                            <span class="badge badge-expired">Expired</span>
+                        {% elif link.is_active %}
+                            <span class="badge badge-active">Active</span>
+                        {% else %}
+                            <span class="badge badge-disabled">Disabled</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ link.created_at|date:"M j, Y" }}</td>
+                    <td class="row-actions">
+                        <a href="{% url 'link_stats' link.short_code %}">Stats</a>
+                        <form method="post" action="{% url 'toggle_link_active' link.short_code %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="link-button">{% if link.is_active %}Disable{% else %}Enable{% endif %}</button>
+                        </form>
+                        <form method="post" action="{% url 'delete_link' link.short_code %}" class="inline-form" onsubmit="return confirm('Delete this link permanently?');">
+                            {% csrf_token %}
+                            <button type="submit" class="link-button link-button-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty-state">You haven't shortened any links yet. <a href="{% url 'home' %}">Create your first one</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Link unavailable{% endblock %}
+{% block content %}
+<section class="result-card">
+    {% if short_url.is_expired %}
+        <h1>This link has expired</h1>
+        <p>The link <strong>{{ short_url.short_code }}</strong> expired on {{ short_url.expires_at|date:"M j, Y g:i A" }}.</p>
+    {% else %}
+        <h1>This link is disabled</h1>
+        <p>The link <strong>{{ short_url.short_code }}</strong> has been deactivated by its owner.</p>
+    {% endif %}
+    <a href="{% url 'home' %}" class="btn-primary">Shorten a new URL</a>
+</section>
+{% endblock %}

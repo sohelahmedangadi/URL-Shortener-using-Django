@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-card">
+    <h1>Log in</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <p class="field-error">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+            <p class="field-error">{{ form.non_field_errors.0 }}</p>
+        {% endif %}
+        <button type="submit" class="btn-primary">Log in</button>
+    </form>
+    <p class="hint">No account? <a href="{% url 'signup' %}">Sign up</a></p>
+</section>
+{% endblock %}

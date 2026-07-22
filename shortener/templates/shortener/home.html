@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Shorten a URL{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Shorten a long URL</h1>
+    <p class="subtitle">Paste a link below. Optionally pick a custom alias or an expiration date.</p>
+
+    <form method="post" class="shorten-form">
+        {% csrf_token %}
+        <div class="field">
+            {{ form.original_url.label_tag }}
+            {{ form.original_url }}
+            {% if form.original_url.errors %}
+                <p class="field-error">{{ form.original_url.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                {{ form.custom_alias.label_tag }}
+                {{ form.custom_alias }}
+                {% if form.custom_alias.errors %}
+                    <p class="field-error">{{ form.custom_alias.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div class="field">
+                {{ form.expires_at.label_tag }}
+                {{ form.expires_at }}
+                {% if form.expires_at.errors %}
+                    <p class="field-error">{{ form.expires_at.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Shorten URL</button>
+    </form>
+
+    {% if not user.is_authenticated %}
+        <p class="hint">
+            <a href="{% url 'signup' %}">Create a free account</a> to manage your links and see click stats later.
+        </p>
+    {% endif %}
+</section>
+{% endblock %}
