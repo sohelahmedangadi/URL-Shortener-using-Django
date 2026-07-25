@@ -59,5 +59,3 @@ Visit `http://127.0.0.1:8000/`.
   top-level URL routes.
 - `DEBUG = True` and the `SECRET_KEY` in `settings.py` are dev-only; replace
   both (and set `ALLOWED_HOSTS`) before deploying.
-
-- Thank you 
